@@ -1,12 +1,3 @@
-import ReactDOMServer from 'react-dom/server';
-import mjml2html from 'mjml';
-import { minify as htmlMinify } from 'html-minifier';
-
-import { renderToJSON } from './utils/render-to-json';
-import { renderToJSON2 } from './utils/render-to-json2';
-
-export { render, renderToMjml, renderToJSON, renderToJSON2 };
-
 export { Mjml } from './mjml';
 export { MjmlAccordion } from './mjml-accordion';
 export { MjmlAccordionElement } from './mjml-accordion-element';
@@ -43,35 +34,3 @@ export { MjmlTable } from './mjml-table';
 export { MjmlText } from './mjml-text';
 export { MjmlTitle } from './mjml-title';
 export { MjmlWrapper } from './mjml-wrapper';
-
-function render(email, options = {}) {
-  const defaults = {
-    keepComments: false,
-    beautify: false,
-    validationLevel: 'strict',
-  };
-
-  const html = mjml2html(renderToMjml(email), {
-    ...defaults,
-    ...options,
-    minify: undefined,
-  });
-
-  if (options.minify) {
-    return {
-      html: htmlMinify(html.html, {
-        caseSensitive: true,
-        collapseWhitespace: true,
-        minifyCSS: true,
-        removeComments: true,
-        removeEmptyAttributes: true,
-      }),
-    };
-  }
-
-  return html;
-}
-
-function renderToMjml(email) {
-  return ReactDOMServer.renderToStaticMarkup(email);
-}

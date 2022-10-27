@@ -1,37 +1,29 @@
-# mjml-react &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/wix-incubator/mjml-react/blob/master/LICENSE) <a href="https://www.npmjs.com/package/mjml-react"><img src="https://img.shields.io/npm/v/mjml-react.svg" alt="npm version"></a> [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/wix-incubator/mjml-react/pulls)
+<img src="https://cdn.worldvectorlogo.com/logos/mjml-by-mailjet.svg" height="64"/> <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K" width="64" height="64"/>
 
----
+**MJML** is a markup language created by [Mailjet](https://www.mailjet.com/) for building responsive HTML emails based on XML.
 
-## NOTICE: This project is no longer maintained. :warning:
+This library enables **MJML** integration with **React** so you can build a responsive HTML email on the fly.
 
-This project is no longer maintained. There will be no more new features, fixes and releases. Feel free to fork this repository, use different build system and release this project under different name.
+Note that this is a stripped down version of the original https://github.com/wix-incubator/mjml-react which this does not include `html-minifier` and `mjml2json` to make it work on both Node.js and a web browser.
 
-Known forks:
+## Getting started
 
-* [Faire mjml-react fork](https://github.com/Faire/mjml-react)
-
----
-
-<img src="https://cdn.worldvectorlogo.com/logos/mjml-by-mailjet.svg" height="64"/> &middot; <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K" width="64" height="64"/>
-
-There is an awesome library [mjml](https://mjml.io/) with github repo here [https://github.com/mjmlio/mjml](https://github.com/mjmlio/mjml).
-
-`MJML` is a markup language created by [Mailjet](https://www.mailjet.com/).
-So in order to create emails on the fly we created a library with `React` components.
-
-## How it works
-
-Install the required dependencies first:
-
-```bash
-npm install react react-dom mjml mjml-react
+1. Install the dependencies.
+```sh
+yarn add react react-dom
 ```
 
-And afterwards write a code like a pro:
+2. Install the packages by adding the below to the `dependencies` field in your _package.json_
+```
+"mjml": "https://github.com/taskworld/mjml.git",
+"react-mjml": "https://github.com/taskworld/react-mjml.git",
+```
 
-```js
+3. Create and run the below JavaScript-React file.
+
+```jsx
+import { renderToStaticMarkup } from 'react-dom/server';
 import {
-  render,
   Mjml,
   MjmlHead,
   MjmlTitle,
@@ -41,9 +33,10 @@ import {
   MjmlColumn,
   MjmlButton,
   MjmlImage,
-} from "mjml-react";
+} from "react-mjml";
+import mjml2html from 'mjml';
 
-const { html, errors } = render(
+const mjmlString = renderToStaticMarkup(
   <Mjml>
     <MjmlHead>
       <MjmlTitle>Last Minute Offer</MjmlTitle>
@@ -67,29 +60,15 @@ const { html, errors } = render(
         </MjmlColumn>
       </MjmlSection>
     </MjmlBody>
-  </Mjml>,
-  { validationLevel: "soft" }
+  </Mjml>
 );
+
+const { html, errors } = mjml2html(mjmlString, { validationLevel: "soft" });
 ```
 
 And as the result you will get a nice looking email HTML (works in mobile too!)
 
 ![preview](https://user-images.githubusercontent.com/10008149/41058394-59b8ce9e-69d2-11e8-9eb9-c294f35bae9f.png)
-
-## Options
-
-mjml-react sets the following MJML options when rendering to HTML:
-
-```js
-{
-  keepComments: false,
-  beautify: false,
-  minify: true,
-  validationLevel: 'strict'
-}
-```
-
-If you want to override these, you can pass an object to `render` as a second argument. See the [MJML docs](https://documentation.mjml.io/#inside-node-js) for the full list of options you can set.
 
 ## Extensions
 
@@ -98,7 +77,7 @@ import {
   MjmlHtml,
   MjmlComment,
   MjmlConditionalComment
-} from 'mjml-react/extensions';
+} from 'react-mjml/extensions';
 
 <MjmlComment>Built with ... at ...</MjmlComment>
 // <!--Built with ... at ...-->
@@ -133,12 +112,3 @@ fixConditionalComment(
 );
 // <!--[if IE]><div>Hello World</div><![endif]-->
 ```
-
-## Limitations
-
-Currently `mjml` and `mjml-react` libraries are meant to be run inside a node.
-
-## Example project
-
-You can find an example project here
-[https://github.com/wix-incubator/mjml-react-example](https://github.com/wix-incubator/mjml-react-example)
