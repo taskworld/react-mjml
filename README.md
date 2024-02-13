@@ -34,7 +34,7 @@ import {
   MjmlButton,
   MjmlImage,
 } from "react-mjml";
-import mjml2html from 'mjml';
+import mjml2html from 'mjml-browser';
 
 const mjmlString = renderToStaticMarkup(
   <Mjml>
